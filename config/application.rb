@@ -28,5 +28,20 @@ module Wogi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # By default api-only application has session disabled.
+    # However it looks like there's an error relative to Devise below:
+    # ActionDispatch::Request::Session::DisabledSessionError
+    # 'Your application has sessions disabled. To write to the session you must first configure a session store'
+    # So creating a fake session on top of CookieStore in order to by pass the error
+    class FakeRackSession < Hash
+      def enabled?
+        false
+      end
+    end
+
+    config.session_store FakeRackSession.new
+    config.middleware.insert_before Rack::Head, ActionDispatch::Session::CookieStore, config.session_options
+    config.middleware.insert_before ActionDispatch::Session::CookieStore, ActionDispatch::Cookies
   end
 end
