@@ -10,15 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_09_071729) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_10_161029) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "brand_state", ["active", "inactive"]
 
   create_table "brands", force: :cascade do |t|
     t.string "name"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.enum "state", default: "active", null: false, enum_type: "brand_state"
     t.index ["user_id"], name: "index_brands_on_user_id"
   end
 
