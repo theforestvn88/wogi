@@ -5,26 +5,26 @@ class Api::V1::BrandsController < ApplicationController
   # GET /api/v1/brands
   def index
     authorize Brand
-    @brands = Brand.all
+    @brands = Brand.includes(:owner).all
 
-    render json: @brands
+    render json: brand_json(@brands)
   end
 
   # GET /api/v1/brands/1
   def show
     authorize @brand
-    render json: @brand
+    render json: brand_json(@brand)
   end
 
   # POST /api/v1/brands
   def create
     @brand = Brand.new(brand_params)
-    @brand.user = current_user
+    @brand.owner = current_user
 
     authorize @brand
 
     if @brand.save
-      render json: @brand, status: :created, location: api_v1_brand_url(@brand)
+      render json: brand_json(@brand), status: :created
     else
       render json: @brand.errors, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class Api::V1::BrandsController < ApplicationController
     authorize @brand
 
     if @brand.update(brand_params)
-      render json: @brand
+      render json: brand_json(@brand)
     else
       render json: @brand.errors, status: :unprocessable_entity
     end
@@ -45,16 +45,20 @@ class Api::V1::BrandsController < ApplicationController
   def destroy
     authorize @brand
     @brand.destroy!
+    head :no_content
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
     def set_brand
       @brand = Brand.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def brand_params
       params.require(:brand).permit(:name)
+    end
+
+    def brand_json(brand_data)
+      BrandSerializer.new(brand_data, { include: [ :owner ] }).serializable_hash.to_json
     end
 end

@@ -4,13 +4,15 @@ RSpec.describe "/api/v1/brands", type: :request do
   let(:user) { create(:user) }
   let(:admin) { create(:user, is_admin: true) }
 
-  let(:valid_attributes) {
-    { name: Faker::Name.name, user_id: user.id }
+  let!(:valid_attributes) {
+    { name: Faker::Name.name }
   }
 
-  let(:invalid_attributes) {
-    { name: "", user_id: user.id }
+  let!(:invalid_attributes) {
+    { name: "" }
   }
+
+  let!(:brand) { create(:brand, user_id: admin.id, **valid_attributes) }
 
   let(:auth_headers) {
     get_auth_params_from_sign_in_response_headers(response)
@@ -23,17 +25,22 @@ RSpec.describe "/api/v1/brands", type: :request do
 
     describe "GET /index" do
       it "renders a successful response" do
-        Brand.create! valid_attributes
         get api_v1_brands_url, headers: auth_headers, as: :json
         expect(response).to be_successful
+        expect(response_body["data"].size).to eq(1)
+        expect(json_attributes(:name, index: 0)).to eq(brand.name)
+        expect(json_relationships(:owner, index: 0)[:type]).to eq("user")
+        expect(json_included[:email]).to eq(admin.email)
       end
     end
 
     describe "GET /show" do
       it "renders a successful response" do
-        brand = Brand.create! valid_attributes
         get api_v1_brand_url(brand), headers: auth_headers, as: :json
         expect(response).to be_successful
+        expect(json_attributes(:name)).to eq(brand.name)
+        expect(json_relationships(:owner)[:type]).to eq("user")
+        expect(json_included[:email]).to eq(admin.email)
       end
     end
 
@@ -51,6 +58,9 @@ RSpec.describe "/api/v1/brands", type: :request do
               params: { brand: valid_attributes }, headers: auth_headers, as: :json
           expect(response).to have_http_status(:created)
           expect(response.content_type).to match(a_string_including("application/json"))
+          expect(json_attributes(:name)).to eq(Brand.last.name)
+          expect(json_relationships(:owner)[:type]).to eq("user")
+          expect(json_included[:email]).to eq(admin.email)
         end
       end
 
@@ -78,25 +88,25 @@ RSpec.describe "/api/v1/brands", type: :request do
         }
 
         it "updates the requested brand" do
-          brand = Brand.create! valid_attributes
           patch api_v1_brand_url(brand),
                 params: { brand: new_attributes }, headers: auth_headers, as: :json
           brand.reload
-          skip("Add assertions for updated state")
+          expect(brand.reload.name).to eq(new_attributes[:name])
         end
 
         it "renders a JSON response with the brand" do
-          brand = Brand.create! valid_attributes
           patch api_v1_brand_url(brand),
                 params: { brand: new_attributes }, headers: auth_headers, as: :json
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to match(a_string_including("application/json"))
+          expect(json_attributes(:name)).to eq(brand.reload.name)
+          expect(json_relationships(:owner)[:type]).to eq("user")
+          expect(json_included[:email]).to eq(admin.email)
         end
       end
 
       context "with invalid parameters" do
         it "renders a JSON response with errors for the brand" do
-          brand = Brand.create! valid_attributes
           patch api_v1_brand_url(brand),
                 params: { brand: invalid_attributes }, headers: auth_headers, as: :json
           expect(response).to have_http_status(:unprocessable_entity)
@@ -107,7 +117,6 @@ RSpec.describe "/api/v1/brands", type: :request do
 
     describe "DELETE /destroy" do
       it "destroys the requested brand" do
-        brand = Brand.create! valid_attributes
         expect {
           delete api_v1_brand_url(brand), headers: auth_headers, as: :json
         }.to change(Brand, :count).by(-1)
@@ -122,7 +131,6 @@ RSpec.describe "/api/v1/brands", type: :request do
 
     describe "GET /index" do
       it "renders a unauthorized response" do
-        Brand.create! valid_attributes
         get api_v1_brands_url, headers: auth_headers, as: :json
         expect(response).to have_http_status(:unauthorized)
       end
@@ -130,7 +138,6 @@ RSpec.describe "/api/v1/brands", type: :request do
 
     describe "GET /show" do
       it "renders a unauthorized response" do
-        brand = Brand.create! valid_attributes
         get api_v1_brand_url(brand), headers: auth_headers, as: :json
         expect(response).to have_http_status(:unauthorized)
       end
@@ -152,7 +159,6 @@ RSpec.describe "/api/v1/brands", type: :request do
       }
 
       it "renders a unauthorized response" do
-        brand = Brand.create! valid_attributes
         patch api_v1_brand_url(brand),
               params: { brand: new_attributes }, headers: auth_headers, as: :json
         expect(response).to have_http_status(:unauthorized)
@@ -161,7 +167,6 @@ RSpec.describe "/api/v1/brands", type: :request do
 
     describe "DELETE /destroy" do
       it "renders a unauthorized response" do
-        brand = Brand.create! valid_attributes
         expect {
           delete api_v1_brand_url(brand), headers: auth_headers, as: :json
         }.to change(Brand, :count).by(0)
