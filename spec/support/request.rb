@@ -3,7 +3,7 @@ def response_body
 end
 
 def sign_in(email, password)
-    post user_session_path, params:  { email: , password: }.to_json, headers: { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' }
+    post user_session_path, params:  { email:, password: }.to_json, headers: { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' }
 end
 
 def get_auth_params_from_sign_in_response_headers(response)

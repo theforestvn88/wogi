@@ -22,7 +22,7 @@ describe "auth session", type: :request do
                 expect(response_body[:data][:uid]).to eq(user.uid)
                 expect(response_body[:data][:provider]).to eq('email')
               end
-          
+
               it 'returns a valid client and access token' do
                 token = response.header['access-token']
                 client = response.header['client']
