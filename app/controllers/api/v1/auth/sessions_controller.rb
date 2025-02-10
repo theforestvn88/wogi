@@ -2,7 +2,9 @@
 
 module Api
   module V1
-    class SessionsController < ::DeviseTokenAuth::SessionsController
+    module Auth
+      class SessionsController < ::DeviseTokenAuth::SessionsController
+      end
     end
   end
 end
