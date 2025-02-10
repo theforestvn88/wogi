@@ -31,6 +31,7 @@ gem "bootsnap", require: false
 
 gem "devise"
 gem "devise_token_auth"
+gem "pundit"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -52,4 +53,3 @@ group :test do
   gem "simplecov"
   # TODO: set up parallel_tests ???
 end
-

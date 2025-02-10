@@ -4,6 +4,7 @@ class Api::V1::BrandsController < ApplicationController
 
   # GET /api/v1/brands
   def index
+    authorize Brand
     @brands = Brand.all
 
     render json: @brands
@@ -11,6 +12,7 @@ class Api::V1::BrandsController < ApplicationController
 
   # GET /api/v1/brands/1
   def show
+    authorize @brand
     render json: @brand
   end
 
@@ -18,6 +20,8 @@ class Api::V1::BrandsController < ApplicationController
   def create
     @brand = Brand.new(brand_params)
     @brand.user = current_user
+
+    authorize @brand
 
     if @brand.save
       render json: @brand, status: :created, location: api_v1_brand_url(@brand)
@@ -28,6 +32,8 @@ class Api::V1::BrandsController < ApplicationController
 
   # PATCH/PUT /api/v1/brands/1
   def update
+    authorize @brand
+
     if @brand.update(brand_params)
       render json: @brand
     else
@@ -37,6 +43,7 @@ class Api::V1::BrandsController < ApplicationController
 
   # DELETE /api/v1/brands/1
   def destroy
+    authorize @brand
     @brand.destroy!
   end
 
