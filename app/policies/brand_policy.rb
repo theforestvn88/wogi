@@ -17,6 +17,10 @@ class BrandPolicy < ApplicationPolicy
         @user.is_admin
     end
 
+    def update_state?
+        @user.is_admin
+    end
+
     def destroy?
         @user.is_admin
     end

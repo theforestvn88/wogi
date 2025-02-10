@@ -26,6 +26,10 @@ RSpec.describe BrandPolicy, type: :policies do
             expect(subject.update?).to be_truthy
         end
 
+        it 'allow to update brand state' do
+            expect(subject.update_state?).to be_truthy
+        end
+
         it 'allow to destroy a brand' do
             expect(subject.destroy?).to be_truthy
         end
@@ -48,6 +52,10 @@ RSpec.describe BrandPolicy, type: :policies do
 
         it 'disallow to update a brand' do
             expect(subject.update?).to be_falsy
+        end
+
+        it 'disallow to update brand state' do
+            expect(subject.update_state?).to be_falsy
         end
 
         it 'disallow to destroy a brand' do

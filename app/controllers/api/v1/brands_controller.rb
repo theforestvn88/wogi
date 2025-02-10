@@ -1,6 +1,6 @@
 class Api::V1::BrandsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_brand, only: %i[ show update destroy ]
+  before_action :set_brand, only: %i[ show update update_state destroy ]
 
   # GET /api/v1/brands
   def index
@@ -41,6 +41,22 @@ class Api::V1::BrandsController < ApplicationController
     end
   end
 
+  # PATCH /api/v1/brands/1/update_state
+  def update_state
+    authorize @brand
+
+    # TODO: all projects belong to this brand also need to update state
+    begin
+      if @brand.update(update_state_params)
+        render json: brand_json(@brand)
+      else
+        render json: @brand.errors, status: :unprocessable_entity
+      end
+    rescue => e
+      head :unprocessable_entity
+    end
+  end
+
   # DELETE /api/v1/brands/1
   def destroy
     authorize @brand
@@ -56,6 +72,10 @@ class Api::V1::BrandsController < ApplicationController
 
     def brand_params
       params.require(:brand).permit(:name)
+    end
+
+    def update_state_params
+      params.require(:brand).permit(:state)
     end
 
     def brand_json(brand_data)

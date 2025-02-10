@@ -115,6 +115,40 @@ RSpec.describe "/api/v1/brands", type: :request do
       end
     end
 
+
+    describe "PATCH /update_state" do
+      context "with valid state" do
+        let(:new_attributes) {
+          { state: "inactive" }
+        }
+
+        it "updates the brand state" do
+          patch update_state_api_v1_brand_path(brand),
+                params: { brand: new_attributes }, headers: auth_headers, as: :json
+          brand.reload
+          expect(brand.reload.state).to eq(new_attributes[:state])
+        end
+
+        it "renders a JSON response with the new state" do
+          patch update_state_api_v1_brand_path(brand),
+                params: { brand: new_attributes }, headers: auth_headers, as: :json
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to match(a_string_including("application/json"))
+          expect(json_attributes(:state)).to eq(brand.reload.state)
+        end
+      end
+
+      context "with invalid state" do
+        it "not update state and renders unprocessable_entity" do
+          patch update_state_api_v1_brand_path(brand),
+                params: { brand: { state: "" } }, headers: auth_headers, as: :json
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.content_type).to match(a_string_including("application/json"))
+          expect(brand.state).to eq(brand.reload.state)
+        end
+      end
+    end
+
     describe "DELETE /destroy" do
       it "destroys the requested brand" do
         expect {
