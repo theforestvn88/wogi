@@ -4,4 +4,6 @@ class User < ApplicationRecord
           :recoverable, :rememberable, :validatable
 
   include DeviseTokenAuth::Concerns::User
+
+  has_many :brands
 end
