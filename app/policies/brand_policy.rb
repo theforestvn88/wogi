@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BrandPolicy < ApplicationPolicy
+    include OnwerPolicy
+    
     def index?
         @user.is_admin
     end
@@ -10,24 +12,6 @@ class BrandPolicy < ApplicationPolicy
     end
 
     def create?
-        brand_owner?
+        @user.is_admin
     end
-
-    def update?
-        brand_owner?
-    end
-
-    def update_state?
-        brand_owner?
-    end
-
-    def destroy?
-        brand_owner?
-    end
-
-    private
-
-        def brand_owner?
-            @user.id == @record.user_id
-        end
 end

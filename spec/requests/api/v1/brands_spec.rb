@@ -121,7 +121,6 @@ RSpec.describe "/api/v1/brands", type: :request do
       end
     end
 
-
     describe "PATCH /update_state" do
       context "with valid state" do
         let(:new_attributes) {
