@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Product, type: :model do
   it { should belong_to(:brand) }
+  it { should belong_to(:owner) }
   it { should validate_presence_of(:name) }
   it {
     should define_enum_for(:state).

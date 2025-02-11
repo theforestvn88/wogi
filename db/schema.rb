@@ -31,6 +31,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_014638) do
 
   create_table "products", force: :cascade do |t|
     t.bigint "brand_id", null: false
+    t.bigint "user_id", null: false
     t.string "name"
     t.decimal "price"
     t.datetime "created_at", null: false
@@ -38,6 +39,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_014638) do
     t.enum "state", default: "active", null: false, enum_type: "state"
     t.enum "currency", default: "USD", null: false, enum_type: "currencies"
     t.index ["brand_id"], name: "index_products_on_brand_id"
+    t.index ["user_id"], name: "index_products_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -68,4 +70,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_014638) do
 
   add_foreign_key "brands", "users"
   add_foreign_key "products", "brands"
+  add_foreign_key "products", "users"
 end
