@@ -4,3 +4,4 @@ en:
       invalid_content_type: Invalid content type header
       missing_param: A required param is missing
       not_found: Couldn't find the record
+      record_not_unique: Record already exists

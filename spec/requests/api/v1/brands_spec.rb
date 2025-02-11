@@ -12,10 +12,10 @@ RSpec.describe "/api/v1/brands", type: :request do
     { name: "" }
   }
 
-  let!(:brand) { create(:brand, user_id: admin.id, **valid_attributes) }
+  let!(:brand) { create(:brand, user_id: admin.id, name: Faker::Name.name) }
 
   let(:auth_headers) {
-    get_auth_params_from_sign_in_response_headers(response)
+    extract_auth_params_from_sign_in_response_headers(response)
   }
 
   context 'admin user' do
@@ -77,6 +77,12 @@ RSpec.describe "/api/v1/brands", type: :request do
               params: { brand: invalid_attributes }, headers: auth_headers, as: :json
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to match(a_string_including("application/json"))
+        end
+
+        it "not allow to create duplicate brand name" do
+          post api_v1_brands_url,
+              params: { brand: { name: brand.name } }, headers: auth_headers, as: :json
+          expect(response).to have_http_status(:unprocessable_entity)
         end
       end
     end

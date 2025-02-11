@@ -19,11 +19,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_10_161029) do
   create_enum "state", ["active", "inactive"]
 
   create_table "brands", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.enum "state", default: "active", null: false, enum_type: "state"
+    t.index ["name"], name: "index_brands_on_name", unique: true
     t.index ["user_id"], name: "index_brands_on_user_id"
   end
 
