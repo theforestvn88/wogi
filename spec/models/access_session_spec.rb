@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Assignment, type: :model do
+RSpec.describe AccessSession, type: :model do
   it { should belong_to(:user) }
   it { should belong_to(:product) }
 end

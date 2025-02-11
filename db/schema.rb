@@ -19,15 +19,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_105739) do
   create_enum "currencies", ["USD", "EUR", "JPY", "GBP", "CNY"]
   create_enum "state", ["active", "inactive"]
 
-  create_table "assignments", force: :cascade do |t|
+  create_table "access_sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "product_id", null: false
     t.datetime "expired_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_assignments_on_product_id"
-    t.index ["user_id", "product_id"], name: "index_assignments_on_user_id_and_product_id", unique: true
-    t.index ["user_id"], name: "index_assignments_on_user_id"
+    t.index ["product_id"], name: "index_access_sessions_on_product_id"
+    t.index ["user_id", "product_id"], name: "index_access_sessions_on_user_id_and_product_id", unique: true
+    t.index ["user_id"], name: "index_access_sessions_on_user_id"
   end
 
   create_table "brands", force: :cascade do |t|
@@ -80,8 +80,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_105739) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
-  add_foreign_key "assignments", "products"
-  add_foreign_key "assignments", "users"
+  add_foreign_key "access_sessions", "products"
+  add_foreign_key "access_sessions", "users"
   add_foreign_key "brands", "users"
   add_foreign_key "products", "brands"
   add_foreign_key "products", "users"

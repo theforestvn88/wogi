@@ -13,7 +13,7 @@ Rails.application.routes.draw do
         end
       end
       resources :clients, only: %i[ create destroy ]
-      resources :assignments, only: %i[ create destroy ]
+      resources :access_sessions, only: %i[ create destroy ]
     end
   end
 

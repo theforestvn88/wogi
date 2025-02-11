@@ -6,8 +6,8 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   has_many :brands
-  has_many :assignments
-  has_many :products, through: :assignments
+  has_many :access_sessions
+  has_many :products, through: :access_sessions
 
   validates_numericality_of :payout_rate, in: 1..100
 end

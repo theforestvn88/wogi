@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "/assignments", type: :request do
+RSpec.describe "/access_sessions", type: :request do
   let(:admin) { create(:user, is_admin: true) }
   let(:user) { create(:user) }
 
@@ -27,32 +27,32 @@ RSpec.describe "/assignments", type: :request do
 
     describe "POST /create" do
       context "with valid parameters" do
-        it "creates a new assignment" do
+        it "creates a new access session" do
           expect {
-            post api_v1_assignments_url,
-                params: { assignment: valid_attributes }, headers: auth_headers, as: :json
-          }.to change(Assignment, :count).by(1)
+            post api_v1_access_sessions_url,
+                params: { access_session: valid_attributes }, headers: auth_headers, as: :json
+          }.to change(AccessSession, :count).by(1)
         end
 
-        it "renders a JSON response with the new assignment" do
-          post api_v1_assignments_url,
-              params: { assignment: valid_attributes }, headers: auth_headers, as: :json
+        it "renders a JSON response with the new access_session" do
+          post api_v1_access_sessions_url,
+              params: { access_session: valid_attributes }, headers: auth_headers, as: :json
           expect(response).to have_http_status(:created)
           expect(response.content_type).to match(a_string_including("application/json"))
         end
       end
 
       context "with invalid parameters" do
-        it "does not create a new assignment" do
+        it "does not create a new access_session" do
           expect {
-            post api_v1_assignments_url,
-                params: { assignment: invalid_attributes }, headers: auth_headers, as: :json
-          }.to change(Assignment, :count).by(0)
+            post api_v1_access_sessions_url,
+                params: { access_session: invalid_attributes }, headers: auth_headers, as: :json
+          }.to change(AccessSession, :count).by(0)
         end
 
-        it "renders a JSON response with errors for the new assignment" do
-          post api_v1_assignments_url,
-              params: { assignment: invalid_attributes }, headers: auth_headers, as: :json
+        it "renders a JSON response with errors for the new access_session" do
+          post api_v1_access_sessions_url,
+              params: { access_session: invalid_attributes }, headers: auth_headers, as: :json
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to match(a_string_including("application/json"))
         end
@@ -61,10 +61,10 @@ RSpec.describe "/assignments", type: :request do
 
     describe "DELETE /destroy" do
       it "destroys the requested client" do
-        assignment = Assignment.create! valid_attributes
+        access_session = AccessSession.create! valid_attributes
         expect {
-          delete api_v1_assignment_url(assignment), headers: auth_headers, as: :json
-        }.to change(Assignment, :count).by(-1)
+          delete api_v1_access_session_url(access_session), headers: auth_headers, as: :json
+        }.to change(AccessSession, :count).by(-1)
       end
     end
   end
@@ -77,19 +77,19 @@ RSpec.describe "/assignments", type: :request do
     describe "POST /create" do
       it "renders a unauthorized response" do
         expect {
-          post api_v1_assignments_url,
-              params: { assignment: valid_attributes }, headers: auth_headers, as: :json
-        }.to change(Assignment, :count).by(0)
+          post api_v1_access_sessions_url,
+              params: { access_session: valid_attributes }, headers: auth_headers, as: :json
+        }.to change(AccessSession, :count).by(0)
         expect(response).to have_http_status(:unauthorized)
       end
     end
 
     describe "DELETE /destroy" do
       it "renders a unauthorized response" do
-        assignment = Assignment.create! valid_attributes
+        access_session = AccessSession.create! valid_attributes
         expect {
-          delete api_v1_assignment_url(assignment), headers: auth_headers, as: :json
-        }.to change(Assignment, :count).by(0)
+          delete api_v1_access_session_url(access_session), headers: auth_headers, as: :json
+        }.to change(AccessSession, :count).by(0)
         expect(response).to have_http_status(:unauthorized)
       end
     end

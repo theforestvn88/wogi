@@ -1,4 +1,4 @@
-class Assignment < ApplicationRecord
+class AccessSession < ApplicationRecord
   belongs_to :user
   belongs_to :product
 
