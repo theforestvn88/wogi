@@ -4,6 +4,7 @@ RSpec.describe "/products", type: :request do
   let(:user) { create(:user) }
   let(:admin) { create(:user, is_admin: true) }
   let(:brand) { create(:brand, user_id: admin.id) }
+  let(:inactive_brand) { create(:brand, user_id: admin.id, state: :inactive) }
   let!(:product) { create(:product, brand: brand, owner: admin) }
 
   let(:valid_attributes) {
@@ -91,6 +92,16 @@ RSpec.describe "/products", type: :request do
               params: { product: invalid_attributes }, headers: auth_headers, as: :json
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to match(a_string_including("application/json"))
+        end
+      end
+
+      context "with inactive brand" do
+        it "now allow to create a product" do
+          expect {
+            post api_v1_products_url,
+                params: { product: { name: "product", brand_id: inactive_brand.id, price: 9.9, currency: "usd" } }, headers: auth_headers, as: :json
+          }.to change(Product, :count).by(0)
+          expect(response).to have_http_status(:unprocessable_entity)
         end
       end
     end

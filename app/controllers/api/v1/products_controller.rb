@@ -2,6 +2,7 @@ class Api::V1::ProductsController < ApplicationController
   before_action :authenticate_user!, only: %i[ index show ]
   before_action :authenticate_admin!, except: %i[ index show ]
   before_action :set_product, only: %i[ show update update_state destroy ]
+  before_action :required_brand_active!, only: %i[ create update update_state destroy ]
 
   # GET /products
   def index
@@ -65,12 +66,11 @@ class Api::V1::ProductsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
     def set_product
       @product = Product.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def product_params
       params.require(:product).permit(:brand_id, :name, :price, :currency)
     end
@@ -81,5 +81,9 @@ class Api::V1::ProductsController < ApplicationController
 
     def product_json(product_data)
       ProductSerializer.new(product_data, { include: [ :brand ] }).serializable_hash.to_json
+    end
+
+    def required_brand_active!
+      raise ActiveRecord::RecordInvalid if (@product&.brand || Brand.find(product_params[:brand_id])).inactive?
     end
 end

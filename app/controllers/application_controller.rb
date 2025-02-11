@@ -20,7 +20,7 @@ class ApplicationController < ActionController::API
         end
     
         def render_record_invalid(exception)
-            render_error(exception, exception.record.errors.as_json, :bad_request)
+            render_error(exception, exception.record&.errors&.as_json || { message: I18n.t('api.errors.invalid_input') }, :unprocessable_entity)
         end
 
         def render_record_not_unique(exception)
@@ -32,7 +32,7 @@ class ApplicationController < ActionController::API
         end
 
         def render_argument_error(exception)
-            render_error(exception, { message: I18n.t('api.errors.invalid_input') }, :unprocessable_entity)
+            render_error(exception, { message: I18n.t('api.errors.invalid_input') }, :bad_request)
         end
 
         def render_error(exception, errors, status)
