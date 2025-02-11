@@ -2,6 +2,7 @@
 
 class ProductPolicy < ApplicationPolicy
     include OnwerPolicy
+    include Accessable
     
     def index?
         true
@@ -19,16 +20,10 @@ class ProductPolicy < ApplicationPolicy
 
     def show?
         # normal user should not allow to access inactive or not-accessable product
-        @user.is_admin || (@record.active? && accessable?)
+        @user.is_admin || access?
     end
 
     def create?
         @user.is_admin
     end
-
-    private
-
-        def accessable?
-            @accessable ||= AccessSession.exists?(user_id: @user.id, product_id: @record.id)
-        end
 end
