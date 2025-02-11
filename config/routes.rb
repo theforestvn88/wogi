@@ -12,6 +12,11 @@ Rails.application.routes.draw do
           patch :update_state
         end
       end
+      resources :clients, only: %i[ create destroy ] do
+        member do
+          post :assign_product
+        end
+      end
     end
   end
 
