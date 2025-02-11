@@ -1,7 +1,7 @@
 class Product < ApplicationRecord
   belongs_to :brand
   belongs_to :owner, class_name: "User", foreign_key: :user_id
-  has_many   :access_sessions
+  has_many   :access_sessions, dependent: :destroy
   has_many   :clients, through: :access_sessions, source: :user
 
   enum :state, {

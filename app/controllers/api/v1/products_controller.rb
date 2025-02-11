@@ -7,7 +7,7 @@ class Api::V1::ProductsController < ApplicationController
   # GET /products
   def index
     authorize Product
-    @products = Product.includes(:brand).all
+    @products = policy_scope(Product).includes(:brand).all
 
     render json: product_json(@products)
   end

@@ -6,6 +6,8 @@ RSpec.describe "/products", type: :request do
   let(:brand) { create(:brand, user_id: admin.id) }
   let(:inactive_brand) { create(:brand, user_id: admin.id, state: :inactive) }
   let!(:product) { create(:product, brand: brand, owner: admin) }
+  let!(:product2) { create(:product, brand: brand, owner: admin) }
+  let!(:access_session) { create(:access_session, user: user, product:) }
 
   let(:valid_attributes) {
     { name: Faker::Name.name, brand_id: brand.id, price: 9.9, currency: 'usd'  }
@@ -36,7 +38,7 @@ RSpec.describe "/products", type: :request do
       it "renders a successful response" do
         get api_v1_products_url, headers: auth_headers, as: :json
         expect(response).to be_successful
-        expect(response_body["data"].size).to eq(1)
+        expect(response_body["data"].size).to eq(2)
         expect(json_attributes(:name, index: 0)).to eq(product.name)
         expect(json_relationships(:brand, index: 0)[:type]).to eq("brand")
         expect(json_included[:name]).to eq(brand.name)
