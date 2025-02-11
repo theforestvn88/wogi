@@ -1,5 +1,5 @@
 class Api::V1::BrandsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_admin!
   before_action :set_brand, only: %i[ show update update_state destroy ]
 
   # GET /api/v1/brands

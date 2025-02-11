@@ -10,18 +10,24 @@ class BrandPolicy < ApplicationPolicy
     end
 
     def create?
-        @user.is_admin
+        brand_owner?
     end
 
     def update?
-        @user.is_admin
+        brand_owner?
     end
 
     def update_state?
-        @user.is_admin
+        brand_owner?
     end
 
     def destroy?
-        @user.is_admin
+        brand_owner?
     end
+
+    private
+
+        def brand_owner?
+            @user.id == @record.user_id
+        end
 end

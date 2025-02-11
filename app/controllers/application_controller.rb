@@ -34,4 +34,9 @@ class ApplicationController < ActionController::API
             logger.info { exception }
             render json: { errors: Array.wrap(errors) }, status:
         end
+
+        def authenticate_admin!
+            authenticate_user!
+            raise Pundit::NotAuthorizedError unless current_user.is_admin
+        end
 end
