@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe Product, type: :model do
   it { should belong_to(:brand) }
   it { should belong_to(:owner) }
+  it { should have_many(:assignments) }
+  it { should have_many(:clients).through(:assignments) }
   it { should validate_presence_of(:name) }
   it { should validate_numericality_of(:price).is_greater_than(0) }
   it {

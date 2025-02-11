@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_11_085742) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_11_105739) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,6 +18,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_085742) do
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "currencies", ["USD", "EUR", "JPY", "GBP", "CNY"]
   create_enum "state", ["active", "inactive"]
+
+  create_table "assignments", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "product_id", null: false
+    t.datetime "expired_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id", "product_id"], name: "index_assignments_on_client_id_and_product_id", unique: true
+    t.index ["client_id"], name: "index_assignments_on_client_id"
+    t.index ["product_id"], name: "index_assignments_on_product_id"
+  end
 
   create_table "brands", force: :cascade do |t|
     t.string "name", null: false
@@ -76,6 +87,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_085742) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "assignments", "clients"
+  add_foreign_key "assignments", "products"
   add_foreign_key "brands", "users"
   add_foreign_key "clients", "users"
   add_foreign_key "products", "brands"
