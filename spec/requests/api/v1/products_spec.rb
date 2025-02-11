@@ -18,6 +18,10 @@ RSpec.describe "/products", type: :request do
     { name: "product", brand_id: brand.id, price: 9.9, currency: "money" }
   }
 
+  let(:invalid_price) {
+    { name: "product", brand_id: brand.id, price: 0.0, currency: "usd" }
+  }
+
   let(:auth_headers) {
     extract_auth_params_from_sign_in_response_headers(response)
   }
@@ -76,6 +80,9 @@ RSpec.describe "/products", type: :request do
 
             post api_v1_products_url,
                 params: { product: invalid_currency }, headers: auth_headers, as: :json
+
+            post api_v1_products_url,
+                params: { product: invalid_price }, headers: auth_headers, as: :json
           }.to change(Product, :count).by(0)
         end
 
