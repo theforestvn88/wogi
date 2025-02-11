@@ -45,16 +45,14 @@ class Api::V1::BrandsController < ApplicationController
   def update_state
     authorize @brand
 
-    # TODO: all projects belong to this brand also need to update state
-    begin
-      if @brand.update(update_state_params)
-        render json: brand_json(@brand)
-      else
-        render json: @brand.errors, status: :unprocessable_entity
-      end
-    rescue => e
-      head :unprocessable_entity
+    result = UpdateBrandStateService.new.update(brand: @brand, state: update_state_params[:state])
+    if result.success
+      render json: brand_json(@brand)
+    else
+      render json: { errors: Array.wrap(result.errors) }, status: :unprocessable_entity
     end
+  rescue => e
+    render :bad_request
   end
 
   # DELETE /api/v1/brands/1

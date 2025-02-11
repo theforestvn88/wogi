@@ -46,16 +46,14 @@ class Api::V1::ProductsController < ApplicationController
   def update_state
     authorize @product
 
-    # TODO: all cards issued from this product need to disable
-    begin
-      if @product.update(update_state_params)
-        render json: product_json(@product)
-      else
-        render json: @product.errors, status: :unprocessable_entity
-      end
-    rescue => e
-      head :unprocessable_entity
+    result = UpdateProductStateService.new.update(product: @product, state: update_state_params[:state])
+    if result.success
+      render json: product_json(result.product)
+    else
+      render json: { errors: Array.wrap(result.errors) }, status: :unprocessable_entity
     end
+  rescue => e
+    render :bad_request
   end
 
   # DELETE /products/1

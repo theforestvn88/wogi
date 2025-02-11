@@ -130,6 +130,7 @@ RSpec.describe "/api/v1/brands", type: :request do
         it "updates the brand state" do
           patch update_state_api_v1_brand_path(brand),
                 params: { brand: new_attributes }, headers: auth_headers, as: :json
+          expect(response).to have_http_status(:ok)
           brand.reload
           expect(brand.reload.state).to eq(new_attributes[:state])
         end
