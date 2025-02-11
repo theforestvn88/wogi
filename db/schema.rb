@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_11_014638) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_11_085742) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,6 +27,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_014638) do
     t.enum "state", default: "active", null: false, enum_type: "state"
     t.index ["name"], name: "index_brands_on_name", unique: true
     t.index ["user_id"], name: "index_brands_on_user_id"
+  end
+
+  create_table "clients", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.float "payout_rate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_clients_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -69,6 +77,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_014638) do
   end
 
   add_foreign_key "brands", "users"
+  add_foreign_key "clients", "users"
   add_foreign_key "products", "brands"
   add_foreign_key "products", "users"
 end
