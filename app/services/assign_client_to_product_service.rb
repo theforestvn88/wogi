@@ -3,14 +3,14 @@
 class AssignClientToProductService
     Result = Struct.new(:success, :assignment, :errors)
 
-    def exec(client_id:, product_id:, duration:)
-        client = Client.find(client_id)
+    def exec(user_id:, product_id:, duration:)
+        client = User.find(user_id)
         # TODO: check client
         
         product = Product.find(product_id)
         raise ActiveRecord::RecordInvalid if product.inactive?
 
-        assignment = Assignment.new(client: client, product: product, expired_at: Time.now.utc + duration)
+        assignment = Assignment.new(user: client, product: product, expired_at: Time.now.utc + duration)
         if assignment.save
             Result.new(true, assignment, nil)
         else

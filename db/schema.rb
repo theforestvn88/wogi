@@ -20,14 +20,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_105739) do
   create_enum "state", ["active", "inactive"]
 
   create_table "assignments", force: :cascade do |t|
-    t.bigint "client_id", null: false
+    t.bigint "user_id", null: false
     t.bigint "product_id", null: false
     t.datetime "expired_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["client_id", "product_id"], name: "index_assignments_on_client_id_and_product_id", unique: true
-    t.index ["client_id"], name: "index_assignments_on_client_id"
     t.index ["product_id"], name: "index_assignments_on_product_id"
+    t.index ["user_id", "product_id"], name: "index_assignments_on_user_id_and_product_id", unique: true
+    t.index ["user_id"], name: "index_assignments_on_user_id"
   end
 
   create_table "brands", force: :cascade do |t|
@@ -38,14 +38,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_105739) do
     t.enum "state", default: "active", null: false, enum_type: "state"
     t.index ["name"], name: "index_brands_on_name", unique: true
     t.index ["user_id"], name: "index_brands_on_user_id"
-  end
-
-  create_table "clients", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.float "payout_rate"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_clients_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -78,6 +70,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_105739) do
     t.string "image"
     t.string "email"
     t.boolean "is_admin", default: false
+    t.float "payout_rate", default: 100.0
     t.json "tokens"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -87,10 +80,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_105739) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
-  add_foreign_key "assignments", "clients"
   add_foreign_key "assignments", "products"
+  add_foreign_key "assignments", "users"
   add_foreign_key "brands", "users"
-  add_foreign_key "clients", "users"
   add_foreign_key "products", "brands"
   add_foreign_key "products", "users"
 end

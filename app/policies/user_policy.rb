@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ClientPolicy < ApplicationPolicy
+class UserPolicy < ApplicationPolicy
     def create?
         @user.is_admin
     end

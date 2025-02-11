@@ -4,12 +4,12 @@ class Api::V1::ClientsController < ApplicationController
 
   # POST /clients
   def create
-    @client = Client.new(client_params)
+    @client = User.new(client_params)
 
     authorize @client
 
     if @client.save
-      render json: @client, status: :created, location: api_v1_client_url(@client)
+      render json: @client, status: :created
     else
       render json: @client.errors, status: :unprocessable_entity
     end
@@ -26,11 +26,11 @@ class Api::V1::ClientsController < ApplicationController
   private
     
     def set_client
-      @client = Client.find(params[:id])
+      @client = User.find(params[:id])
     end
 
     def client_params
-      params.require(:client).permit(:user_id, :payout_rate)
+      params.require(:client).permit(:email, :password, :payout_rate)
     end
 
     def assign_params

@@ -25,6 +25,6 @@ class Api::V1::AssignmentsController < ApplicationController
     end
 
     def assignment_params
-      params.require(:assignment).permit(:client_id, :product_id, :duration)
+      params.require(:assignment).permit(:user_id, :product_id, :duration)
     end
 end

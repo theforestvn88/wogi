@@ -3,17 +3,17 @@ require 'rails_helper'
 RSpec.describe "/assignments", type: :request do
   let(:admin) { create(:user, is_admin: true) }
   let(:user) { create(:user) }
-  let(:client) { create(:client, user: user) }
+
   let(:brand) { create(:brand, user_id: admin.id) }
   let!(:active_product) { create(:product, brand: brand, owner: admin) }
   let!(:inactive_product) { create(:product, brand: brand, owner: admin, state: :inactive) }
 
   let(:valid_attributes) {
-    { client_id: client.id, product_id: active_product.id, duration: 1.month }
+    { user_id: user.id, product_id: active_product.id, duration: 1.month }
   }
 
   let(:invalid_attributes) {
-    { client_id: client.id, product_id: inactive_product.id, duration: 1.month }
+    { user_id: user.id, product_id: inactive_product.id, duration: 1.month }
   }
 
   let(:auth_headers) {

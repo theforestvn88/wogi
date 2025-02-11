@@ -2,7 +2,7 @@ class Product < ApplicationRecord
   belongs_to :brand
   belongs_to :owner, class_name: "User", foreign_key: :user_id
   has_many   :assignments
-  has_many   :clients, through: :assignments
+  has_many   :clients, through: :assignments, source: :user
 
   enum :state, {
     active: "active",

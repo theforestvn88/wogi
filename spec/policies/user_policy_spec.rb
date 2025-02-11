@@ -2,13 +2,12 @@
 
 require 'rails_helper'
 
-RSpec.describe ClientPolicy, type: :policies do
+RSpec.describe UserPolicy, type: :policies do
     let(:admin_user) { create(:user, is_admin: true) }
     let(:user) { create(:user) }
-    let(:client) { create(:client, user: user) } 
     
     context 'admin user' do
-        subject { ClientPolicy.new(admin_user, client) }
+        subject { UserPolicy.new(admin_user, User) }
 
         it 'allow to create a client' do
             expect(subject.create?).to be_truthy
@@ -20,7 +19,7 @@ RSpec.describe ClientPolicy, type: :policies do
     end
 
     context 'normal user' do
-        subject { ClientPolicy.new(user, client) }
+        subject { UserPolicy.new(user, User) }
 
         it 'disallow to create a client' do
             expect(subject.create?).to be_falsy

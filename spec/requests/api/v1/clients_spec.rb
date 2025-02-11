@@ -3,13 +3,16 @@ require 'rails_helper'
 RSpec.describe "/clients", type: :request do
   let(:admin) { create(:user, is_admin: true) }
   let(:user) { create(:user) }
+  
+  let(:email) { Faker::Internet.unique.email }
+  let(:password) { Faker::Internet.password(min_length: 10) }
 
   let(:valid_attributes) {
-    { user_id: user.id, payout_rate: 10 }
+    { email:, password:, payout_rate: 10 }
   }
 
   let(:invalid_attributes) {
-    { user_id: user.id, payout_rate: 0 }
+    { email:, password:, payout_rate: 0 }
   }
 
   let(:auth_headers) {
@@ -27,7 +30,7 @@ RSpec.describe "/clients", type: :request do
           expect {
             post api_v1_clients_url,
                 params: { client: valid_attributes }, headers: auth_headers, as: :json
-          }.to change(Client, :count).by(1)
+          }.to change(User, :count).by(1)
         end
 
         it "renders a JSON response with the new client" do
@@ -43,7 +46,7 @@ RSpec.describe "/clients", type: :request do
           expect {
             post api_v1_clients_url,
                 params: { client: invalid_attributes }, headers: auth_headers, as: :json
-          }.to change(Client, :count).by(0)
+          }.to change(User, :count).by(0)
         end
 
         it "renders a JSON response with errors for the new client" do
@@ -57,10 +60,10 @@ RSpec.describe "/clients", type: :request do
 
     describe "DELETE /destroy" do
       it "destroys the requested client" do
-        client = Client.create! valid_attributes
+        client = User.create! valid_attributes
         expect {
           delete api_v1_client_url(client), headers: auth_headers, as: :json
-        }.to change(Client, :count).by(-1)
+        }.to change(User, :count).by(-1)
       end
     end
   end
@@ -75,17 +78,17 @@ RSpec.describe "/clients", type: :request do
         expect {
           post api_v1_clients_url,
               params: { client: valid_attributes }, headers: auth_headers, as: :json
-        }.to change(Client, :count).by(0)
+        }.to change(User, :count).by(0)
         expect(response).to have_http_status(:unauthorized)
       end
     end
 
     describe "DELETE /destroy" do
       it "renders a unauthorized response" do
-        client = Client.create! valid_attributes
+        client = User.create! valid_attributes
         expect {
           delete api_v1_client_url(client), headers: auth_headers, as: :json
-        }.to change(Client, :count).by(0)
+        }.to change(User, :count).by(0)
         expect(response).to have_http_status(:unauthorized)
       end
     end
