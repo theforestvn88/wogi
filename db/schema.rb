@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_11_105739) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_11_141047) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "card_state", ["issued", "active", "canceled"]
   create_enum "currencies", ["USD", "EUR", "JPY", "GBP", "CNY"]
   create_enum "state", ["active", "inactive"]
 
@@ -38,6 +39,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_105739) do
     t.enum "state", default: "active", null: false, enum_type: "state"
     t.index ["name"], name: "index_brands_on_name", unique: true
     t.index ["user_id"], name: "index_brands_on_user_id"
+  end
+
+  create_table "cards", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "product_id", null: false
+    t.string "activation_number"
+    t.string "purchase_pin"
+    t.datetime "canceled_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.enum "state", default: "issued", null: false, enum_type: "card_state"
+    t.index ["product_id"], name: "index_cards_on_product_id"
+    t.index ["user_id"], name: "index_cards_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -83,6 +97,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_105739) do
   add_foreign_key "access_sessions", "products"
   add_foreign_key "access_sessions", "users"
   add_foreign_key "brands", "users"
+  add_foreign_key "cards", "products"
+  add_foreign_key "cards", "users"
   add_foreign_key "products", "brands"
   add_foreign_key "products", "users"
 end
