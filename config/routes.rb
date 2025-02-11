@@ -12,6 +12,8 @@ Rails.application.routes.draw do
           patch :update_state
         end
       end
+      
+      resources :products
     end
   end
 
