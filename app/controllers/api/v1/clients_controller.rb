@@ -1,6 +1,6 @@
 class Api::V1::ClientsController < ApplicationController
   before_action :authenticate_admin!
-  before_action :set_client, only: %i[ assign_product destroy ]
+  before_action :set_client, only: %i[ destroy ]
 
   # POST /clients
   def create
@@ -13,11 +13,6 @@ class Api::V1::ClientsController < ApplicationController
     else
       render json: @client.errors, status: :unprocessable_entity
     end
-  end
-
-  # POST /assign_product
-  def assign_product
-    authorize @client
   end
 
   # DELETE /clients/1

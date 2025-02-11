@@ -9,7 +9,7 @@ RSpec.describe "/clients", type: :request do
   }
 
   let(:invalid_attributes) {
-    { user_id: 0, payout_rate: 10 }
+    { user_id: user.id, payout_rate: 0 }
   }
 
   let(:auth_headers) {
