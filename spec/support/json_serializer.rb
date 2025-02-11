@@ -12,6 +12,6 @@ def json_relationships(rel, index: nil)
     json["relationships"]["#{rel}"]["data"].with_indifferent_access
 end
 
-def json_included
-    response_body["included"][0]["attributes"].with_indifferent_access
+def json_included(index: 0)
+    response_body["included"][index]["attributes"].with_indifferent_access
 end

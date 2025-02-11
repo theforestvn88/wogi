@@ -7,6 +7,7 @@ class ApplicationController < ActionController::API
     rescue_from ActiveRecord::RecordInvalid,         with: :render_record_invalid
     rescue_from ActiveRecord::RecordNotUnique,       with: :render_record_not_unique
     rescue_from ActionController::ParameterMissing,  with: :render_parameter_missing
+    rescue_from ArgumentError,                       with: :render_argument_error
 
     private
 
@@ -28,6 +29,10 @@ class ApplicationController < ActionController::API
 
         def render_parameter_missing(exception)
             render_error(exception, { message: I18n.t('api.errors.missing_param') }, :unprocessable_entity)
+        end
+
+        def render_argument_error(exception)
+            render_error(exception, { message: I18n.t('api.errors.invalid_input') }, :unprocessable_entity)
         end
 
         def render_error(exception, errors, status)

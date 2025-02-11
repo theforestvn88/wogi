@@ -7,13 +7,11 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1, defaults: { format: :json } do
-      resources :brands do
+      resources :brands, :products do
         member do
           patch :update_state
         end
       end
-      
-      resources :products
     end
   end
 
