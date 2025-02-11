@@ -14,6 +14,12 @@ Rails.application.routes.draw do
       end
       resources :clients, only: %i[ create destroy ]
       resources :access_sessions, only: %i[ create destroy ]
+      resources :cards, only: %i[ create ] do
+        member do
+          patch :active
+          patch :cancel
+        end
+      end
     end
   end
 
