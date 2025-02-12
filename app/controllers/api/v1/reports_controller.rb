@@ -8,7 +8,13 @@ class Api::V1::ReportsController < ApplicationController
 
     # GET /api/v1/reports/cancellation
     def cancellations
-        cards = Card.cancellations(from_date: params[:from_date], to_date: params[:to_date]).order(canceled_at: :desc)
-        render json: CardSerializer.new(cards).serializable_hash.to_json
+        pagy, cards = pagy(
+            Card.cancellations(from_date: params[:from_date], to_date: params[:to_date]).order(canceled_at: :desc)
+        )
+
+        render json: {
+            data: CardSerializer.new(cards).serializable_hash[:data],
+            pagination: PagySerializer.new(pagy).serializable_hash[:data]
+        }
     end
 end

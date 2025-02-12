@@ -7,9 +7,12 @@ class Api::V1::ProductsController < ApplicationController
   # GET /products
   def index
     authorize Product
-    @products = policy_scope(Product).includes(:brand).all
+    pagy, @products = pagy(policy_scope(Product).includes(:brand))
 
-    render json: product_json(@products)
+    render json: {
+      pagination: PagySerializer.new(pagy).serializable_hash[:data],
+      **product_json(@products)
+    }
   end
 
   # GET /products/1
@@ -80,7 +83,7 @@ class Api::V1::ProductsController < ApplicationController
     end
 
     def product_json(product_data)
-      ProductSerializer.new(product_data, { include: [ :brand ] }).serializable_hash.to_json
+      ProductSerializer.new(product_data, { include: [ :brand ] }).serializable_hash
     end
 
     def required_brand_active!

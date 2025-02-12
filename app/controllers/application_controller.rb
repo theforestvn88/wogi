@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
     include DeviseTokenAuth::Concerns::SetUserByToken
     include Pundit::Authorization
+    include Pagy::Backend
 
     rescue_from Pundit::NotAuthorizedError,          with: :response_unauthorized
     rescue_from ActiveRecord::RecordNotFound,        with: :render_not_found
@@ -8,6 +9,7 @@ class ApplicationController < ActionController::API
     rescue_from ActiveRecord::RecordNotUnique,       with: :render_record_not_unique
     rescue_from ActionController::ParameterMissing,  with: :render_parameter_missing
     rescue_from ArgumentError,                       with: :render_argument_error
+    rescue_from Pagy::OverflowError,                 with: :render_paging_overflow
 
     private
 
@@ -38,6 +40,10 @@ class ApplicationController < ActionController::API
         def render_error(exception, errors, status)
             logger.info { exception }
             render json: { errors: Array.wrap(errors) }, status:
+        end
+
+        def render_paging_overflow
+            render json: { error: "Page out of range" }, status: :not_found
         end
 
         def authenticate_admin!
