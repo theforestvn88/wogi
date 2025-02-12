@@ -12,34 +12,18 @@ RSpec.describe CardPolicy, type: :policies do
     let!(:card) { create(:card, user: owner, product: product) }
 
     context 'owner user' do
-        subject { CardPolicy.new(owner, card) }
-
-        it 'allow to create a card' do
-            expect(subject.create?).to be_truthy
-        end
-
-        it 'allow to active a card' do
-            expect(subject.active?).to be_truthy
-        end
-
-        it 'allow to cancel card' do
-            expect(subject.cancel?).to be_truthy
+        permissions :create?, :active?, :cancel? do
+            it 'permit' do
+                expect(CardPolicy).to permit(owner, card)
+            end
         end
     end
 
     context 'other user' do
-        subject { CardPolicy.new(other_user, card) }
-
-        it 'disallow to create a card' do
-            expect(subject.create?).to be_falsy
-        end
-
-        it 'disallow to active the card' do
-            expect(subject.active?).to be_falsy
-        end
-
-        it 'disallow to cancel the card' do
-            expect(subject.cancel?).to be_falsy
+        permissions :create?, :active?, :cancel? do
+            it 'not permit' do
+                expect(CardPolicy).not_to permit(other_user, card)
+            end
         end
     end
 end
