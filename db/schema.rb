@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_12_011750) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_12_041706) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,6 +51,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_12_011750) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.enum "state", default: "issued", null: false, enum_type: "card_state"
+    t.index ["canceled_at"], name: "index_cards_on_canceled_at"
     t.index ["product_id"], name: "index_cards_on_product_id"
     t.index ["user_id"], name: "index_cards_on_user_id"
   end
