@@ -6,6 +6,7 @@ RSpec.describe Product, type: :model do
   it { should belong_to(:owner) }
   it { should have_many(:access_sessions).dependent(:destroy) }
   it { should have_many(:clients).through(:access_sessions).source(:user) }
+  it { should have_many(:cards) }
   it { should validate_presence_of(:name) }
   it { should validate_numericality_of(:price).is_greater_than(0) }
   it {

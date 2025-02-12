@@ -4,16 +4,26 @@ class UpdateProductStateService
     Result = Struct.new(:success, :product, :errors)
 
     def update(product:, state:)
-        if product.update(state: state)
-            # TODO: sync log
-            # TODO: send-inform-email job
-            # TODO: update product's cards
-            #
-            Result.new(true, product, nil)
-        else
-            Result.new(false, product, product.errors)
+        result = nil
+        begin
+            ActiveRecord::Base.transaction do
+                product.cards.find_in_batches { |batch|
+                    batch.each { |card|
+                        # TODO: update this product's cards first
+                        # raise any error
+                    }
+                }
+
+                # update the product state
+                product.update!(state: state)
+                # TODO: sync log
+                # TODO: send-inform-email job
+                result = Result.new(true, product, nil)
+            end
+        rescue => e
+            result = Result.new(false, product, e)
         end
-    rescue => e
-        Result.new(false, product, e)
+
+        result
     end
 end

@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :brands
   has_many :access_sessions
   has_many :products, through: :access_sessions
+  has_many :cards
 
   validates_numericality_of :payout_rate, in: 1..100
 end

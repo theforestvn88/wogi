@@ -4,6 +4,7 @@ class Product < ApplicationRecord
   has_many   :access_sessions, dependent: :destroy
   has_many   :clients, through: :access_sessions, source: :user
   has_many   :custom_fields, as: :customable
+  has_many   :cards
 
   enum :state, {
     active: "active",
