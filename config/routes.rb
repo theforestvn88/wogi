@@ -12,6 +12,7 @@ Rails.application.routes.draw do
           patch :update_state
         end
       end
+      resources :custom_fields, only: %i[ create destroy ]
       resources :clients, only: %i[ create destroy ]
       resources :access_sessions, only: %i[ create destroy ]
       resources :cards, only: %i[ create ] do
