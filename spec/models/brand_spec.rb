@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'models/customable_spec'
 
 RSpec.describe Brand, type: :model do
   it { should belong_to(:owner) }
@@ -12,4 +13,6 @@ RSpec.describe Brand, type: :model do
       ).
       backed_by_column_of_type(:enum)
   }
+
+  it_behaves_like 'customable'
 end

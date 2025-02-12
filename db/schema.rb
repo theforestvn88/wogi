@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_11_141047) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_12_011750) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -37,6 +37,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_141047) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.enum "state", default: "active", null: false, enum_type: "state"
+    t.integer "custom_fields_count", default: 0, null: false
     t.index ["name"], name: "index_brands_on_name", unique: true
     t.index ["user_id"], name: "index_brands_on_user_id"
   end
@@ -54,6 +55,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_141047) do
     t.index ["user_id"], name: "index_cards_on_user_id"
   end
 
+  create_table "custom_fields", force: :cascade do |t|
+    t.string "field_name"
+    t.string "field_type"
+    t.string "customable_type", null: false
+    t.bigint "customable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customable_type", "customable_id"], name: "index_custom_fields_on_customable"
+  end
+
   create_table "products", force: :cascade do |t|
     t.bigint "brand_id", null: false
     t.bigint "user_id", null: false
@@ -63,6 +74,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_11_141047) do
     t.datetime "updated_at", null: false
     t.enum "state", default: "active", null: false, enum_type: "state"
     t.enum "currency", default: "USD", null: false, enum_type: "currencies"
+    t.integer "custom_fields_count", default: 0, null: false
     t.index ["brand_id"], name: "index_products_on_brand_id"
     t.index ["user_id"], name: "index_products_on_user_id"
   end

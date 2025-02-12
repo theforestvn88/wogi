@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'models/customable_spec'
 
 RSpec.describe Product, type: :model do
   it { should belong_to(:brand) }
@@ -19,11 +20,13 @@ RSpec.describe Product, type: :model do
     should define_enum_for(:currency).
       with_values(
         usd: 'USD',
-        eur: 'EUR', 
-        jpy: 'JPY', 
-        gbp: 'GBP', 
+        eur: 'EUR',
+        jpy: 'JPY',
+        gbp: 'GBP',
         cny: 'CNY'
       ).
       backed_by_column_of_type(:enum)
   }
+
+  it_behaves_like 'customable'
 end
