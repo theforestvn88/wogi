@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::API
     include DeviseTokenAuth::Concerns::SetUserByToken
     include Pundit::Authorization
-    include Pagy::Backend
 
     rescue_from Pundit::NotAuthorizedError,          with: :response_unauthorized
     rescue_from ActiveRecord::RecordNotFound,        with: :render_not_found

@@ -1,4 +1,6 @@
 class Api::V1::ProductsController < ApplicationController
+  include Pagy::Backend
+
   before_action :authenticate_user!, only: %i[ index show ]
   before_action :authenticate_admin!, except: %i[ index show ]
   before_action :set_product, only: %i[ show update update_state destroy ]
@@ -7,7 +9,10 @@ class Api::V1::ProductsController < ApplicationController
   # GET /products
   def index
     authorize Product
-    pagy, @products = pagy(policy_scope(Product).includes(:brand))
+
+    pagy, @products = Rails.cache.fetch("products-page#{params[:page] || 1}", expires_in: 10.minutes) do
+      pagy(policy_scope(Product).includes(:brand))
+    end
 
     render json: {
       pagination: PagySerializer.new(pagy).serializable_hash[:data],

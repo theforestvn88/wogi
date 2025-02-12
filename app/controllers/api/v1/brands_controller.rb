@@ -5,7 +5,9 @@ class Api::V1::BrandsController < ApplicationController
   # GET /api/v1/brands
   def index
     authorize Brand
-    @brands = Brand.includes(:owner).all
+    @brands = Rails.cache.fetch("brands", expires_in: 1.hour) do
+      Brand.includes(:owner).all
+    end
 
     render json: brand_json(@brands)
   end
