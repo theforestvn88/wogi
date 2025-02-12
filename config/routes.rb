@@ -21,6 +21,8 @@ Rails.application.routes.draw do
           patch :cancel
         end
       end
+      get "/reports/spendings", to: "reports#spendings"
+      get "/reports/cancellations", to: "reports#cancellations"
     end
   end
 

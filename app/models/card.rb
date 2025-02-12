@@ -7,4 +7,8 @@ class Card < ApplicationRecord
     active: "active",
     canceled: "canceled"
   }
+
+  scope :cancellations, ->(from_date:, to_date:) {
+    where(canceled_at: from_date..to_date)
+  }
 end
