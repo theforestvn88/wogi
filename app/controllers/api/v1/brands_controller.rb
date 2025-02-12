@@ -51,7 +51,7 @@ class Api::V1::BrandsController < ApplicationController
     else
       render json: { errors: Array.wrap(result.errors) }, status: :unprocessable_entity
     end
-  rescue => e
+  rescue
     render :bad_request
   end
 

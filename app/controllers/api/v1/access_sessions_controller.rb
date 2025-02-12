@@ -20,7 +20,7 @@ class Api::V1::AccessSessionsController < ApplicationController
   end
 
   private
-    
+
     def set_access_session
       @access_session = AccessSession.find(params[:id])
     end

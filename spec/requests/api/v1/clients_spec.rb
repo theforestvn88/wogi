@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "/clients", type: :request do
   let(:admin) { create(:user, is_admin: true) }
   let(:user) { create(:user) }
-  
+
   let(:email) { Faker::Internet.unique.email }
   let(:password) { Faker::Internet.password(min_length: 10) }
 

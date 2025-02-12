@@ -3,7 +3,7 @@
 class ProductPolicy < ApplicationPolicy
     include OnwerPolicy
     include Accessable
-    
+
     def index?
         true
     end
@@ -16,7 +16,7 @@ class ProductPolicy < ApplicationPolicy
             user.products
           end
         end
-      end
+    end
 
     def show?
         # normal user should not allow to access inactive or not-accessable product

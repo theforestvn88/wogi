@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe UserPolicy, type: :policies do
     let(:admin_user) { create(:user, is_admin: true) }
     let(:user) { create(:user) }
-    
+
     context 'admin user' do
         subject { UserPolicy.new(admin_user, User) }
 

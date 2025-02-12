@@ -16,23 +16,23 @@ class ApplicationController < ActionController::API
         end
 
         def render_not_found(exception)
-            render_error(exception, { message: I18n.t('api.errors.not_found') }, :not_found)
+            render_error(exception, { message: I18n.t("api.errors.not_found") }, :not_found)
         end
-    
+
         def render_record_invalid(exception)
-            render_error(exception, exception.record&.errors&.as_json || { message: I18n.t('api.errors.invalid_input') }, :unprocessable_entity)
+            render_error(exception, exception.record&.errors&.as_json || { message: I18n.t("api.errors.invalid_input") }, :unprocessable_entity)
         end
 
         def render_record_not_unique(exception)
-            render_error(exception, { message: I18n.t('api.errors.record_not_unique') }, :unprocessable_entity)
+            render_error(exception, { message: I18n.t("api.errors.record_not_unique") }, :unprocessable_entity)
         end
 
         def render_parameter_missing(exception)
-            render_error(exception, { message: I18n.t('api.errors.missing_param') }, :unprocessable_entity)
+            render_error(exception, { message: I18n.t("api.errors.missing_param") }, :unprocessable_entity)
         end
 
         def render_argument_error(exception)
-            render_error(exception, { message: I18n.t('api.errors.invalid_input') }, :bad_request)
+            render_error(exception, { message: I18n.t("api.errors.invalid_input") }, :bad_request)
         end
 
         def render_error(exception, errors, status)

@@ -14,7 +14,7 @@ describe UpdateBrandStateService, type: :services do
     it "update brand state" do
         expect(brand.reload.state).to eq("inactive")
     end
-    
+
     it "update brand's products state" do
         expect(product1.reload.state).to eq("inactive")
         expect(product2.reload.state).to eq("inactive")

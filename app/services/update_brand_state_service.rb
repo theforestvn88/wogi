@@ -20,5 +20,5 @@ class UpdateBrandStateService
         end
     rescue => e
         Result.new(false, brand, e)
-    end    
+    end
 end

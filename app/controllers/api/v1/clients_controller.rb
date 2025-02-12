@@ -24,7 +24,7 @@ class Api::V1::ClientsController < ApplicationController
   end
 
   private
-    
+
     def set_client
       @client = User.find(params[:id])
     end

@@ -6,7 +6,7 @@ class AssignClientToProductService
     def exec(user_id:, product_id:, duration:)
         client = User.find(user_id)
         # TODO: check client
-        
+
         product = Product.find(product_id)
         raise ActiveRecord::RecordInvalid if product.inactive?
 

@@ -71,7 +71,7 @@ RSpec.describe "/cards", type: :request do
         it "active the requested card" do
           patch active_api_v1_card_url(card),
                 params: activation_params, headers: auth_headers, as: :json
-          
+
           expect(response).to have_http_status(:ok)
 
           card.reload
@@ -93,7 +93,7 @@ RSpec.describe "/cards", type: :request do
       it "active the requested card" do
         patch cancel_api_v1_card_url(card),
               params: {}, headers: auth_headers, as: :json
-        
+
         expect(response).to have_http_status(:ok)
         card.reload
         expect(card.state).to eq("canceled")
@@ -124,7 +124,7 @@ RSpec.describe "/cards", type: :request do
       it "renders a unauthorized response" do
         patch active_api_v1_card_url(card),
               params: activation_params, headers: auth_headers, as: :json
-        
+
         expect(response).to have_http_status(:unauthorized)
         card.reload
         expect(card.state).to eq("issued")
@@ -135,7 +135,7 @@ RSpec.describe "/cards", type: :request do
       it "renders a unauthorized response" do
         patch cancel_api_v1_card_url(card),
               params: {}, headers: auth_headers, as: :json
-        
+
         expect(response).to have_http_status(:unauthorized)
         card.reload
         expect(card.state).to eq("issued")
