@@ -10,7 +10,7 @@ class Api::V1::ProductsController < ApplicationController
   def index
     authorize Product
 
-    pagy, @products = Rails.cache.fetch("products-page#{params[:page] || 1}", expires_in: 10.minutes) do
+    pagy, @products = Rails.cache.fetch(products_cache_key, expires_in: 10.minutes) do
       pagy(policy_scope(Product).includes(:brand))
     end
 
@@ -93,5 +93,9 @@ class Api::V1::ProductsController < ApplicationController
 
     def required_brand_active!
       raise ActiveRecord::RecordInvalid if (@product&.brand || Brand.find(product_params[:brand_id])).inactive?
+    end
+
+    def products_cache_key
+      "products-user#{current_user.id}-page#{params[:page] || 1}"
     end
 end
