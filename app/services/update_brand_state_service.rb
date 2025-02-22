@@ -5,26 +5,23 @@ class UpdateBrandStateService
 
     def update(brand:, state:)
         result = nil
+
         begin
             ActiveRecord::Base.transaction do
-                # update this branch's products first
-                update_product_state_service = UpdateProductStateService.new
-                brand.products.find_in_batches { |batch|
-                    batch.each { |product|
-                        update_product_result = update_product_state_service.update(product: product, state: state)
-                        raise ActiveRecord::Rollback unless update_product_result.success
-                    }
-                }
-
-                # update the brand state
                 brand.update!(state: state)
-
-                # at this time all states are updated correct
-                # TODO: log
-                # TODO: send-inform-email job for the brand and all brand's products (in batch)
-
-                result = Result.new(true, brand, nil)
+                brand.products.in_batches { |batch_of_products|
+                    batch_of_products.update_all(state: state)
+                    if brand.inactive?
+                        Card.where(product_id: batch_of_products.pluck(:id)).update_all(state: Card.states[:canceled])
+                    end
+                }             
             end
+            
+            # TODO: run refun-canceled-cards service
+            # TODO: log
+            # TODO: send-inform-email job for the brand and all brand's products (in batch)
+
+            result = Result.new(true, brand, nil)
         rescue => e
             result = Result.new(false, brand, e)
         end
