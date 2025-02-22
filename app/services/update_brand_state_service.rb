@@ -12,7 +12,7 @@ class UpdateBrandStateService
                 brand.products.find_in_batches { |batch|
                     batch.each { |product|
                         update_product_result = update_product_state_service.update(product: product, state: state)
-                        raise ActiveRecord::RecordInvalid unless update_product_result.success
+                        raise ActiveRecord::Rollback unless update_product_result.success
                     }
                 }
 
