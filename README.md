@@ -1,5 +1,6 @@
-# wogi
-Wogi Assignment
+# Wogi Assignment
+
+This is Wogi interview assignment
 
 ## Objective
 Develop a comprehensive App interface and API that fulfills the following specifications:
